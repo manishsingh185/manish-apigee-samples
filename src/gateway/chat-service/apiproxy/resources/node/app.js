@@ -49,7 +49,7 @@ io.sockets.on('connection', function (socket) { // First connection
 				var entity = {
     						type: 'chatmessage',
     						message: transmit.message,
-							sender: transmit.pseudo};
+							sender: transmit.pseudo+" from local"};
 				Usergrid.POST(entity, function(error, usergridResponse, entity) {
                     // entity should now have a uuid property and be created
                     console.log("Entity Created in Apigee BaaS");

@@ -40,7 +40,9 @@ $(function() {
 });
 
 //Socket.io
-var socket = io.connect();
+var socket = io.connect('http://manishsingh185-test.apigee.net/chat-service', {
+    port: 80
+});
 socket.on('connect', function() {
 	console.log('connected');
 });

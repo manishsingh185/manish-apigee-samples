@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<APIProxy revision="1" name="chat-service">
+    <ConfigurationVersion majorVersion="4" minorVersion="0"/>
+    <CreatedAt>1468644421038</CreatedAt>
+    <CreatedBy>immanish4u@gmail.com</CreatedBy>
+    <Description>Node JS chat service</Description>
+    <DisplayName>chat-service</DisplayName>
+    <LastModifiedAt>1468644497213</LastModifiedAt>
+    <LastModifiedBy>immanish4u@gmail.com</LastModifiedBy>
+    <Policies/>
+    <ProxyEndpoints>
+        <ProxyEndpoint>default</ProxyEndpoint>
+    </ProxyEndpoints>
+    <Resources>
+        <Resource>node://app.js</Resource>
+    </Resources>
+    <TargetServers/>
+    <TargetEndpoints>
+        <TargetEndpoint>default</TargetEndpoint>
+    </TargetEndpoints>
+    <validate>false</validate>
+</APIProxy>
