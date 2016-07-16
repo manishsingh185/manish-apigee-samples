@@ -1,0 +1,228 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+        <modelVersion>4.0.0</modelVersion>
+        <groupId>apigee</groupId>
+        <artifactId>parent-pom</artifactId>
+        <packaging>pom</packaging>
+        <version>1.0</version>
+        <pluginRepositories>
+
+        </pluginRepositories>
+        <modules>
+        </modules>
+        <build>
+
+                <pluginManagement>
+                        <plugins>
+                                <plugin>
+                                        <groupId>io.apigee.build-tools.enterprise4g</groupId>
+                                        <artifactId>apigee-edge-maven-plugin</artifactId>
+                                        <version>1.0.1</version>
+                                </plugin>
+                        </plugins>
+                </pluginManagement>
+                <plugins>
+
+                        <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>2.3.2</version>
+                                <configuration>
+                                        <source>1.6</source>
+                                        <target>1.6</target>
+                                </configuration>
+                        </plugin>
+
+
+                        <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-surefire-plugin</artifactId>
+                                <version>2.9</version>
+                                <configuration>
+                                        <testFailureIgnore>false</testFailureIgnore>
+                                </configuration>
+                        </plugin>
+                   <plugin>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <version>2.5</version>
+                        <executions>
+                            <execution>
+                                <id>auto-clean</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>clean</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>io.apigee.build-tools.enterprise4g</groupId>
+                        <artifactId>proxy-dependency-maven-plugin</artifactId>
+                        <version>2.0.0</version>
+                        <executions>
+                            <execution>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>resolve</goal>
+                                </goals>
+                                <configuration>
+                                    <proxyRefs>
+                                        <proxyRef>../PaymarkCommons</proxyRef>
+                                    </proxyRefs>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>		
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.3</version>
+				<executions>
+					<execution>
+						<id>copy-resources-step</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<!-- this is important -->
+							<overwrite>true</overwrite>
+							<!-- target -->
+							<outputDirectory>${basedir}/target/apiproxy/resources/node</outputDirectory>
+							<resources>
+								<resource>
+									<!-- source -->
+									<directory>apiproxy/resources/node</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<!-- this is to solve deployment issue with windows systems -->
+						<id>copy-js</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<!-- this is important -->
+							<overwrite>true</overwrite>
+							<!-- target -->
+							<outputDirectory>${basedir}/target/apiproxy/resources/jsc</outputDirectory>
+							<resources>
+								<resource>
+									<!-- source -->
+									<directory>apiproxy/resources/jsc</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-config-step</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<!-- this is important -->
+							<overwrite>true</overwrite>
+							<!-- target -->
+							<outputDirectory>${basedir}/target/apiproxy/resources/jsc/config</outputDirectory>
+							<resources>
+								<resource>
+									<!-- source -->
+									<directory>apiproxy/resources/jsc/config</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-jar-zips</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<!-- this is important -->
+							<overwrite>true</overwrite>
+							<!-- target -->
+							<outputDirectory>${basedir}/target/apiproxy/resources/java</outputDirectory>
+							<resources>
+								<resource>
+									<!-- source -->
+									<directory>../PaymarkCommons/apiproxy/resources/java</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					
+				</executions>
+			</plugin>
+            <plugin>
+                <groupId>com.google.code.maven-replacer-plugin</groupId>
+                <artifactId>replacer</artifactId>
+                <version>1.5.3</version>
+                <executions>                
+                    <execution>
+                        <id>replace-properties</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>replace</goal>
+                        </goals>
+                        <configuration>
+                            <ignoreErrors>true</ignoreErrors>
+                            <basedir>${basedir}/target/apiproxy</basedir>
+                            <includes>
+                                <include>**/*.xml</include>
+                                <include>**/*.js</include>
+                            </includes>
+                            <tokenValueMap>props/${env}.properties</tokenValueMap>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>replace-properties-commons</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>replace</goal>
+                        </goals>
+                        <configuration>
+                            <ignoreErrors>true</ignoreErrors>
+                            <basedir>${basedir}/target/apiproxy</basedir>
+                            <includes>
+                                <include>**/*.xml</include>
+                                <include>**/*.js</include>
+                            </includes>
+                            <tokenValueMap>../PaymarkCommons/props/${env}.properties</tokenValueMap>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+     
+   <plugin>
+               <groupId>io.apigee.build-tools.enterprise4g</groupId>
+               <artifactId>apigee-edge-maven-plugin</artifactId>
+                <configuration>
+                    <skip>false</skip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>configure-bundle-step</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>configure</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>install-bundle-step</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>deploy</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+                </plugins>
+        </build>
+</project>
